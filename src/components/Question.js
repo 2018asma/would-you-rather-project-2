@@ -31,9 +31,9 @@ class Question extends React.Component {
           <ul>
             <li style={{display: 'flex', justifyContent: 'space-between'}}
             >
-              <di>
+              <div>
               {question.optionOne.text}
-              </di>
+              </div>
               <div>
               {
                 question.optionOne.votes.includes(auth) ? <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTUomMCRZprTkiLqoTvNrSa9n_yq5isqH5XtAyErjzm4ZW2Bznz' alt='your answer'
@@ -51,7 +51,7 @@ class Question extends React.Component {
               <div>
               {question.optionTwo.text}
               </div>
-              <di>
+              <div>
               {
                 question.optionTwo.votes.includes(auth) ? <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTUomMCRZprTkiLqoTvNrSa9n_yq5isqH5XtAyErjzm4ZW2Bznz' alt='your answer'
                 style={{
@@ -60,7 +60,7 @@ class Question extends React.Component {
                 }}
                 /> : ""
               }
-              </di>
+              </div>
             </li>
           </ul>
           <Button

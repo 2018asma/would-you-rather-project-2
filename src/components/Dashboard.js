@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { withRouter } from 'react-router-dom'
 import Question from './Question';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Row, Col } from 'reactstrap';
 import classnames from 'classnames';
@@ -82,4 +83,4 @@ function mapStateToProps ({ questions, users, authedUser }) {
   }
 }
 
-export default connect(mapStateToProps)(DashBoard)
+export default withRouter(connect(mapStateToProps)(DashBoard))

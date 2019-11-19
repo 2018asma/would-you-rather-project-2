@@ -22,12 +22,14 @@ class NavBar extends PureComponent {
     return (
       <div>
         <Navbar bg="primary" variant="dark" light expand="md">
-          <NavbarBrand tag={Link} to="/">Would You Rather Game</NavbarBrand>
           {authedUser &&
           <Fragment>
             <NavbarToggler onClick={this.toggle}/>
             <Collapse isOpen={this.state.isOpen} navbar>
               <Nav className="ml-auto" navbar>
+              <NavItem>
+                  <NavLink tag={Link} to="/">Home</NavLink>
+                </NavItem>
                 <NavItem>
                   <NavLink tag={Link} to="/add">New Question</NavLink>
                 </NavItem>
@@ -38,7 +40,6 @@ class NavBar extends PureComponent {
                   <User id={authedUser}/>
                 </NavItem>
                 <NavItem>
-                  {/*<NavLink tag={Link} to='/logout'>Logout</NavLink>*/}
                   <Button 
                   tag={Link} 
                   to='/logout' 

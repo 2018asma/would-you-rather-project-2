@@ -9,24 +9,33 @@ import {
   Button,
 } from "reactstrap";
 import { connect } from "react-redux";
+import {Redirect, withRouter}from "react-router-dom"
 import PropTypes from "prop-types";
 import { setAuthedUser } from "../actions/authedUser";
 
 class Login extends Component {
   constructor(props) {
     super(props);
-    this.state = { userId: "" };
+    this.state = { 
+      userId: "",
+      try: false
+     };
     this.handleChangeUser = this.handleChangeUser.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChangeUser(event) {
-    this.setState({ userId: event.target.value });
+    this.setState({ 
+      userId: event.target.value,
+     });
   }
 
   handleSubmit(event) {
     const { userId } = this.state;
     const { authenticate } = this.props;
+    this.setState({
+      try: true
+    })
     if (userId) {
       authenticate(userId);
     } else {
@@ -36,8 +45,12 @@ class Login extends Component {
   }
 
   render() {
-    const { users } = this.props;
+    const { users} = this.props;
     const { userId } = this.state;
+    const { from } = this.props.location.state || { from: { pathname: "/" }}
+    if(this.state.try === true){
+      return <Redirect to={from}/>
+    }
     return (
       <Row>
         <Col sm="12" md={{ size: 6, offset: 3 }}>
@@ -102,7 +115,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(Login);
+)(Login));

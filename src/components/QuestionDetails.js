@@ -12,6 +12,7 @@ import {
   Row,
   Col
 } from "reactstrap";
+import { Redirect, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import User from "./User";
 import { handleAnswer } from "../actions/shared";
@@ -41,16 +42,18 @@ class QuestionDetails extends PureComponent {
       total,
       percOne,
       percTwo,
+      notFound
     } = this.props;
-    console.log(total)
     const { selectedOption } = this.state;
+
+    if (notFound === true) {
+      return <Redirect to="/404" />;
+    }
     return (
       <Row>
         <Col sm="12" md={{ size: 6, offset: 3 }}>
           <Card>
-            <CardHeader>
-              <User id={questionAuthor.id} />
-            </CardHeader>
+            <CardHeader> <User id={questionAuthor.id} /></CardHeader>
             <CardBody>
               <CardTitle>
                 <h4>Would You Rather</h4>
@@ -147,18 +150,25 @@ function financial(x) {
 }
 
 function mapStateToProps({ questions, users, authedUser }, { match }) {
-  const auth = authedUser
+  const auth = authedUser;
   const answers = users[authedUser].answers;
   let answer, percOne, percTwo, total;
   const { id } = match.params;
-  const question = questions[id];
-  if (answers.hasOwnProperty(question.id)) {
+
+  let notFound = true;
+  let question = "";
+  answer = "";
+  let questionAuthor = "";
+  if (questions[id] !== undefined) {
+    notFound = false;
+    question = questions[id];
     answer = answers[question.id];
+    questionAuthor = users[question.author];
+    total = question.optionOne.votes.length + question.optionTwo.votes.length;
+    percOne = financial((question.optionOne.votes.length / total) * 100);
+    percTwo = financial((question.optionTwo.votes.length / total) * 100);
   }
-  const questionAuthor = users[question.author];
-  total = question.optionOne.votes.length + question.optionTwo.votes.length;
-  percOne = financial((question.optionOne.votes.length / total) * 100);
-  percTwo = financial((question.optionTwo.votes.length / total) * 100);
+
   return {
     question,
     questionAuthor,
@@ -166,13 +176,13 @@ function mapStateToProps({ questions, users, authedUser }, { match }) {
     total,
     percOne,
     percTwo,
-    auth
+    auth,
+    notFound
   };
 }
 
 function mapDispatchToProps(dispatch, props) {
   const { id } = props.match.params;
-
   return {
     saveQuestionAnswer: answer => {
       dispatch(handleAnswer(id, answer));
@@ -180,7 +190,6 @@ function mapDispatchToProps(dispatch, props) {
   };
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(QuestionDetails);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(QuestionDetails)
+);
